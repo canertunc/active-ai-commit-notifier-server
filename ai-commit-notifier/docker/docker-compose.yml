@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  ai-commit-notifier:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: ai-commit-notifier
+    ports:
+      - "5000:5000"
+    env_file:
+      - ../.env  # <-- BU SATIR YETERLİ
+    volumes:
+      - ../logs:/app/logs
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - ai-commit-network
+
+networks:
+  ai-commit-network:
+    driver: bridge
+
+volumes:
+  app_logs:
+    driver: local

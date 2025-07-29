@@ -10,15 +10,31 @@ from slack_sdk.errors import SlackApiError
 import hmac
 import hashlib
 import json
-# Logging configuration
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.FileHandler('logs/app.log'),
-        logging.StreamHandler()
-    ]
-)
+
+# Logging configuration - Railway için optimize edildi
+def setup_logging():
+    """Setup logging for both local and Railway environments"""
+    handlers = [logging.StreamHandler()]  # Console logging her zaman
+    
+    # Railway'de logs klasörü oluştur (eğer yoksa)
+    try:
+        logs_dir = 'logs'
+        if not os.path.exists(logs_dir):
+            os.makedirs(logs_dir, exist_ok=True)
+        handlers.append(logging.FileHandler('logs/app.log'))
+        print("✅ File logging enabled: logs/app.log")
+    except Exception as e:
+        print(f"⚠️ File logging disabled: {e}")
+        print("📝 Using console logging only")
+    
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(asctime)s - %(levelname)s - %(message)s',
+        handlers=handlers
+    )
+
+# Setup logging
+setup_logging()
 logger = logging.getLogger(__name__)
 
 app = Flask(__name__)

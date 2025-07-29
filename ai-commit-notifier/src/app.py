@@ -83,7 +83,7 @@ def verify_github_signature(request, secret):
     # Güvenli karşılaştırma
     return hmac.compare_digest(expected_signature, signature)
 
-@app.route('/github-webhook', methods=['POST'])
+@app.route('/github-webhook/mcp', methods=['POST'])
 def github_webhook():
     try:
         if not GITHUB_WEBHOOK_SECRET:

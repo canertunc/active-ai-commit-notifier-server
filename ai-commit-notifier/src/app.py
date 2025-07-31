@@ -74,7 +74,7 @@ def verify_github_signature(request, secret):
         return False  # Sadece sha256 destekleniyor
     
     # Raw payload bytes
-    payload = request.get_data(cache=False, as_text=False)
+    payload = request.data
     
     # HMAC SHA256 hesapla
     mac = hmac.new(secret.encode(), msg=payload, digestmod=hashlib.sha256)
